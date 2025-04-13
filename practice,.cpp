@@ -228,7 +228,42 @@ int main()
         }
         else if(line.rfind("MOVE ",0)==0)
         {
-            
+            istringstream iss(line.substr(5));
+            int ls,p,i;
+            char d;
+            iss>>ls>>p>>i>>d;
+            ls--;
+            int newPos;
+            string songtomove = playLists[ls]->removeAt(p-1);
+            if(d=='L')
+            {
+                newPos = p - 1 - i;
+            }
+            else if(d=='R')
+            {
+                newPos = p - 1 + i;
+            }
+            playLists[ls]->insertAt(newPos,songtomove);
+        }
+        else if(line.rfind("REVERSE ",0)==0)
+        {
+            istringstream iss(line.substr(8));
+            int ls,k;
+            iss>>ls>>k;
+            ls--;
+            if(playLists[ls]->size == 0)
+            {
+                cout<<"Playlist "<<ls+1<<" is empty\n";
+            }
+            else
+            {
+                playLists[ls]->reversegroup(k);
+            }
+        }
+        else if(line.rfind("SAVE ",0)==0)
+        {
+            int ls = stoi(line.substr(5))-1;
+            playLists[ls]->printlist(ls+1);
         }
     }
 }
