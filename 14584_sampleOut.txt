@@ -1,0 +1,41 @@
+Place 0 Summary
+Total Money: 127
+Total People Entered: 8
+Total People Quit: 0
+Current People Queuing: 59
+
+Entered Families :
+Family 3 with 4 people
+Family 2 with 3 people
+Family 1 with 1 people
+
+Place 1 Summary
+Total Money: 184
+Total People Entered: 67
+Total People Quit: 0
+Current People Queuing: 0
+
+Entered Families :
+Family 3 with 2 people
+Family 2 with 45 people
+Family 1 with 20 people
+
+Place 2 Summary
+Total Money: 18
+Total People Entered: 11
+Total People Quit: 0
+Current People Queuing: 9
+
+Entered Families :
+Family 3 with 4 people
+Family 2 with 3 people
+Family 1 with 4 people
+
+Place 3 Summary
+Total Money: 4
+Total People Entered: 4
+Total People Quit: 0
+Current People Queuing: 40
+
+Entered Families :
+Family 1 with 4 people
