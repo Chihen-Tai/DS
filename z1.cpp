@@ -128,9 +128,9 @@ private:
         if (first >= end || !head || !head->next)
             return;
 
-        Node dummy("");
-        dummy.next = head;
-        Node *prev = &dummy, *cur = head;
+        Node *dummy = new Node("");
+        dummy->next = head;
+        Node *prev = dummy, *cur = head;
         for (int i = 0; i < first; ++i)
         {
             prev = cur;
@@ -147,7 +147,7 @@ private:
             prev->next = next;
         }
 
-        head = dummy.next;
+        head = dummy->next;
         tail = head;
         while (tail && tail->next)
             tail = tail->next;
