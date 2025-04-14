@@ -1,145 +1,141 @@
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <sstream>
 
 using namespace std;
 
-// 節點結構，儲存單一首歌的字串資料
-struct Node {
+struct Node
+{
     string song;
-    Node* next;
-    Node(const string& s) : song(s), next(nullptr) {}
+    Node *next;
+    Node(const string &song) : song(song), next(nullptr) {}
 };
-
-// 自訂的 linked list，用來管理一個播放清單
-class LinkedList {
+class LinkedList
+{
 public:
-    Node* head;
-    Node* tail;
+    Node *head;
+    Node *tail;
     int size;
-
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
-
-    ~LinkedList() {
-        while (head) {
-            Node* tmp = head;
-            head = head->next;
-            delete tmp;
-        }
-    }
-
-    void push_back(const string& s) {
-        Node* node = new Node(s);
-        if (!head) {
+    void push_back(const string &s)
+    {
+        Node *node = new Node(s);
+        if (!head)
             head = tail = node;
-        } else {
+        else
             tail->next = node;
-            tail = node;
-        }
+        tail = node;
         size++;
     }
 
-    string removeAt(int pos) {
-        Node* cur = head;
-        string ret;
-        if (pos == 0) {
-            ret = head->song;
+    string removeAt(int pos)
+    {
+        Node *cur = head;
+        Node *prev = nullptr;
+        if (pos == 0)
+        {
             head = head->next;
+            if (!head)
+                tail = nullptr;
+            string song = cur->song;
             delete cur;
             size--;
-            if (size == 0)
-                tail = nullptr;
-            return ret;
+            return song;
         }
-        Node* prev = nullptr;
-        for (int i = 0; i < pos; i++) {
+        for (int i = 0; i < pos; ++i)
+        {
             prev = cur;
             cur = cur->next;
         }
-        ret = cur->song;
+        string song = cur->song;
         prev->next = cur->next;
         if (cur == tail)
             tail = prev;
         delete cur;
         size--;
-        return ret;
+        return song;
     }
 
-    void insertAt(int pos, const string& s) {
-        Node* node = new Node(s);
-        if (pos == 0) {
+    void insertAt(int pos, const string &s)
+    {
+        Node *node = new Node(s);
+        if (pos == 0)
+        {
             node->next = head;
             head = node;
-            if (size == 0)
+            if (!tail)
                 tail = node;
-            size++;
-            return;
         }
-        Node* cur = head;
-        Node* prev = nullptr;
-        for (int i = 0; i < pos; i++) {
-            prev = cur;
-            cur = cur->next;
+        else
+        {
+            Node *cur = head;
+            for (int i = 0; i < pos - 1; i++)
+            {
+                cur = cur->next;
+            }
+
+            node->next = cur->next;
+            cur->next = node;
+            if (!node->next)
+                tail = node;
         }
-        prev->next = node;
-        node->next = cur;
-        if (node->next == nullptr)
-            tail = node;
         size++;
     }
 
-    void printList(int playlistNumber) {
-        if (!head) {
-            cout << "Playlist " << playlistNumber << " is empty\n";
+    void printlist(int playlistnumber)
+    {
+        if (!head)
+        {
+            cout << "Playlist " << playlistnumber << " is empty\n";
             return;
         }
-        cout << "Playlist " << playlistNumber << ":\n";
-        Node* cur = head;
-        while (cur) {
+
+        cout << "Playlist " << playlistnumber << ":\n";
+        Node *cur = head;
+        while (cur)
+        {
             cout << "> " << cur->song << "\n";
             cur = cur->next;
         }
     }
-
-    void reverseGroups(int k) {
-        if (!head || k <= 1)
-            return;
-
+    void reversegroup(int k)
+    {
         int count = size;
         int start = 0;
-        while (start < count) {
+        while (start < count)
+        {
             int end = min(start + k - 1, count - 1);
-            reverseRange(start, end);
+            reverserange(start, end);
             start += k;
         }
     }
 
 private:
-    void reverseRange(int first, int last) {
-        if (first >= last || !head || !head->next)
+    void reverserange(int first, int end)
+    {
+        if (first >= end || !head || !head->next)
             return;
-        Node* dummy = new Node("");
-        dummy->next = head;
-        dummy->next = head;
-        Node* left = dummy;
-        Node* now = head;
-        int idx = 0;
 
-        for (; now != nullptr && idx < first; idx++) {
-            left = now;
-            now = now->next;
+        Node *dummy = new Node("");
+        dummy->next = head;
+        Node *prev = dummy;
+        Node *cur = head;
+        int idx = 0;
+        for (; idx < first; idx++)
+        {
+            prev = cur;
+            cur = cur->next;
         }
 
-        while (now && now->next && idx < last) {
-            Node* next = now->next;
-            now->next = next->next;
-            next->next = left->next;
-            left->next = next;
+        while (cur && cur->next && idx < end)
+        {
+            Node *next = cur->next;
+            cur->next = next->next;
+            next->next = prev->next;
+            prev->next = next;
             idx++;
         }
-
         head = dummy->next;
         tail = head;
         while (tail && tail->next)
@@ -147,71 +143,92 @@ private:
     }
 };
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
+int main()
+{
     int s;
     cin >> s;
     cin.ignore();
 
-    vector<LinkedList*> playlists(s);
-    for (int i = 0; i < s; i++) {
+    vector<LinkedList *> playlists(s);
+    for (int i = 0; i < s; ++i)
         playlists[i] = new LinkedList();
-    }
 
-    string typedSong;
+    string typesong;
     int cursor = 0;
-
     string line;
-    while (getline(cin, line)) {
+
+    while (getline(cin, line))
+    {
         if (line.empty())
             continue;
-        if (line.size() == 1 && isalnum(line[0])) {
-            typedSong.insert(typedSong.begin() + cursor, line[0]);
-            cursor++;
-        } else if (line.rfind("ADD ", 0) == 0) {
-            int ls = stoi(line.substr(4)) - 1;
-            playlists[ls]->push_back(typedSong);
-            typedSong.clear();
+        istringstream iss(line);
+        string token;
+        iss >> token;
+
+        if (token == "ADD")
+        {
+            int ls;
+            iss >> ls;
+            playlists[ls - 1]->push_back(typesong);
+            typesong.clear();
             cursor = 0;
-        } else if (line.rfind("CURSOR ", 0) == 0) {
-            istringstream iss(line.substr(7));
+        }
+        else if (token == "CURSOR")
+        {
             int i;
             char d;
             iss >> i >> d;
-            if (d == 'L') 
-                cursor = max(0, cursor - i);
-            else if (d == 'R') 
-                cursor = min((int)typedSong.size(), cursor + i);
-        } else if (line.rfind("MOVE ", 0) == 0) {
-            istringstream iss(line.substr(5));
+            if (d == 'L')
+            {
+                cursor = cursor - i;
+            }
+            else
+            {
+                cursor = cursor + i;
+            }
+        }
+        else if (token == "MOVE")
+        {
             int ls, p, i;
             char d;
             iss >> ls >> p >> i >> d;
-            ls--;
-            string songToMove = playlists[ls]->removeAt(p - 1);
-            int newPos = (d == 'L') ? (p - 1) - i : (p - 1) + i;
-            playlists[ls]->insertAt(newPos, songToMove);
-        } else if (line.rfind("REVERSE ", 0) == 0) {
-            istringstream iss(line.substr(8));
+            int pos = p - 1;
+            string song;
+            song = playlists[ls - 1]->removeAt(pos);
+            int newpos;
+            if (d == 'L')
+            {
+                newpos = pos - i;
+            }
+            else
+            {
+                newpos = pos + i;
+            }
+            playlists[ls - 1]->insertAt(newpos, song);
+        }
+        else if (token == "REVERSE")
+        {
             int ls, k;
             iss >> ls >> k;
-            ls--;
-            if (playlists[ls]->size == 0) {
-                cout << "Playlist " << ls + 1 << " is empty\n";
-            } else {
-                playlists[ls]->reverseGroups(k);
+            if (playlists[ls - 1]->size == 0)
+            {
+                cout << "Playlist " << ls << " is empty\n";
             }
-        } else if (line.rfind("SAVE ", 0) == 0) {
-            int ls = stoi(line.substr(5)) - 1;
-            playlists[ls]->printList(ls + 1);
+            else
+            {
+                playlists[ls - 1]->reversegroup(k);
+            }
+        }
+        else if (token == "SAVE")
+        {
+            int ls;
+            iss >> ls;
+            playlists[ls - 1]->printlist(ls);
+        }
+        else
+        {
+            typesong.insert(typesong.begin() + cursor, line[0]);
+            cursor++;
         }
     }
-
-    for (auto plist : playlists) {
-        delete plist;
-    }
-
-    return 0;
 }
